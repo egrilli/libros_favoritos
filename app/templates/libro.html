@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block titulo %} Libros Favoritos{% endblock %}
+{% block contenido %}
+{% include "nav.html" %}
+<div class="container">
+    <h1 class="text-center py-4">Libros Favoritos!</h1>
+
+    <h2>Felicitaciones te pudiste Logear a Libros Favoritos!</h2>
+    <h3>ID: {{request.session.usuario.id}}</h3>
+    <h3>Usuario: {{request.session.usuario.name}} </h3>
+    <h3>Correo: {{request.session.usuario.email}} </h3>
+    <h3>Rol: {{request.session.usuario.rol}} </h3>
+
+    <hr>
+    <hr>
+
+
+    {% if book.uploaded_by.id == request.session.usuario.id %}
+    <div class="row">
+        <div class="col-6">
+            <form action="/{{book.id}}/actualizar" method="post"> 
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="title">Titulo</label>
+                    <input type="text" name="title" class="form-control" value="{{ book.title }}">
+                </div>
+                <ul>
+                    <li>Subido por: {{ book.uploaded_by }}</li>
+                    <li>Fecha de Subida el: {{ book.created_at | date:'d-M-Y h:i' }}</li>
+                    <li>Actualizado el: {{ book.updated_at | date:'d-M-Y h:i' }}</li>
+                </ul>
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <textarea name="descripcion" cols="30" rows="10"
+                        class="form-control">  {{ book.description }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Actualizar</button>
+                <a href="/{{ book.id }}/borrar" class="btn btn-danger">Borrar</a>
+            </form>
+        </div>
+        <div class="col-6">
+            <h1>Usuarios a los que les gusta este libro:</h1>
+            <ul>
+                {% for user in book.users_who_like.all %}
+                <li>{{ user.firstname }} {{ user.lastname }}</li>
+                {% endfor %}
+                {% if user not in book.users_who_like.all %}
+                <a href="/{{ book.id }}/megusta" class="btn btn-primary">Me gusta!</a>
+                {% else %}
+                <a href="/{{ book.id }}/nomegusta" class="btn btn-warning">Ya no me gusta!</a>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    <br>
+    {% else %}
+    <div class="row">
+        <div class="col-6">
+            <h1>{{ book.title }}</h1>
+            <ul>
+                <li>Agregado por: {{ book.uploaded_by }}</li>
+                <li>Agregado el: {{ book.created_at | date:'d-M-Y h:i' }}</li>
+                <li>Actualizado el: {{ book.updated_at | date:'d-M-Y h:i' }}</li>
+            </ul>
+            <h4>Descripción</h4>
+            <p>{{ book.description }}</p>
+        </div>
+
+    </div>
+</div>
+<br>
+{% endif %}
+{% endblock %}
