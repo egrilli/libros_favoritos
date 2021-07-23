@@ -6,7 +6,7 @@
   <h1 class="text-center py-4">Libros Favoritos!</h1>
 
   <h2>Felicitaciones te pudiste Logear a Libros Favoritos!</h2>
-  <h3>ID: {{request.session.usuario.id}}</h3>
+  <h3>ID: {{request.session.usuario.id}} </h3>
   <h3>Usuario: {{request.session.usuario.name}} </h3>
   <h3>Correo: {{request.session.usuario.email}} </h3>
   <h3>Rol: {{request.session.usuario.rol}} </h3>
@@ -20,8 +20,8 @@
       <form action="/nuevo-libro" method="post">
         {% csrf_token %}
         <div class="form-group">
-          <label for="title">Titulo</label>
-          <input type="text" name="title" class="form-control" id="title">
+          <label>Titulo</label>
+          <input type="text" name="title" class="form-control">
         </div>
         <div class="form-group">
           <label>Descripción</label>
@@ -48,7 +48,8 @@
         </ul>
       </ul>
       {% endfor %}
-      {% endif %}
+      {% endif  %}
+
     </div>
   </div>
 

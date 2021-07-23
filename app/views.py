@@ -110,8 +110,7 @@ def nuevoLibro(request):
             return redirect("/panel")
         newbook= Book.objects.create(title=request.POST['title'],
             description=request.POST['description'],
-            uploaded_by= User.objects.get(id=request.session['usuario']['id']),
-        )
+            uploaded_by= User.objects.get(id=request.session['usuario']['id']))
         user = User.objects.get(id=request.session['usuario']['id'])
         user.liked_books.add(newbook)
     return redirect('/panel')
@@ -141,8 +140,7 @@ def meGusta(request,id):
 def noMeGusta(request, id):
     book = Book.objects.get(id=id)
     user = User.objects.get(id=request.session['usuario']['id'])
-    if book in user.liked_books.all():
-        book.users_who_like.remove(user)
+    book.users_who_like.remove(user)
     return redirect(f'/book/{id}')
 
 
