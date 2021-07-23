@@ -18,7 +18,7 @@
     {% if book.uploaded_by.id == request.session.usuario.id %}
     <div class="row">
         <div class="col-6">
-            <form action="/{{book.id}}/actualizar" method="post"> 
+            <form action="/{{book.id}}/actualizar" method="post">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="title">Titulo</label>
@@ -37,6 +37,7 @@
                 <button type="submit" class="btn btn-success">Actualizar</button>
                 <a href="/{{ book.id }}/borrar" class="btn btn-danger">Borrar</a>
             </form>
+            <br>
         </div>
         <div class="col-6">
             <h1>Usuarios a los que les gusta este libro:</h1>
@@ -51,23 +52,44 @@
                 {% endif %}
             </ul>
         </div>
+
+
+
+        {% else %}
+        <div class="row">
+            <div class="col-6">
+                <h1>{{ book.title }}</h1>
+                <ul>
+                    <li>Agregado por: {{ book.uploaded_by }}</li>
+                    <li>Agregado el: {{ book.created_at | date:'d-M-Y h:i' }}</li>
+                    <li>Actualizado el: {{ book.updated_at | date:'d-M-Y h:i' }}</li>
+                </ul>
+                <h4>Descripción</h4>
+                <p>{{ book.description }}</p>
+            </div>
+
+            <div class="col-6">
+                <h1>Usuarios a los que les gusta este libro:</h1>
+                <ul>
+                    {% for user in book.users_who_like.all %}
+                    <li>{{ user.firstname }} {{ user.lastname }}</li>
+                    {% endfor %}
+                    {% if user not in book.users_who_like.all %}
+                    <a href="/{{ book.id }}/megusta" class="btn btn-primary">Me gusta!</a>
+                    {% else %}
+                    <a href="/{{ book.id }}/nomegusta" class="btn btn-warning">Ya no me gusta!</a>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        <br>
+
+        </div>
     </div>
     <br>
-    {% else %}
-    <div class="row">
-        <div class="col-6">
-            <h1>{{ book.title }}</h1>
-            <ul>
-                <li>Agregado por: {{ book.uploaded_by }}</li>
-                <li>Agregado el: {{ book.created_at | date:'d-M-Y h:i' }}</li>
-                <li>Actualizado el: {{ book.updated_at | date:'d-M-Y h:i' }}</li>
-            </ul>
-            <h4>Descripción</h4>
-            <p>{{ book.description }}</p>
-        </div>
 
-    </div>
-</div>
-<br>
-{% endif %}
+
+    {% endif %}
+
+
 {% endblock %}
